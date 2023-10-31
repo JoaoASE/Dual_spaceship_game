@@ -2,8 +2,8 @@ import pygame
 import os
 
 
-WIDTH, HEIGHT = 900,500
-WIN = pygame.display.set_mode((WIDTH,HEIGHT))
+WIDTH, HEIGHT = 900, 500
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("First Game !")
 
 WHITE = (255, 255, 255)
@@ -18,7 +18,9 @@ MAX_BULLETS = 3
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 55, 40
 
 YELLOW_HIT = pygame.USEREVENT + 1
-RED_HIT = pygame.USEREVENT +2
+RED_HIT = pygame.USEREVENT + 2
+
+SPACE = pygame.transform.scale(pygame.image.load(os.path.join("Assets", "space.png")), (WIDTH, HEIGHT))
 
 
 YELLOW_SPACESHIP_IMAGE = pygame.image.load(os.path.join("Assets", "spaceship_yellow.png"))
@@ -26,8 +28,8 @@ YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESH
 RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join("Assets", "spaceship_red.png"))
 RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), -90)
 def draw_window(red, yellow, red_bullets, yellow_bullets):
-    WIN.fill(WHITE)
-    pygame.draw.rect(WIN, BLACK, BORDER )
+    WIN.blit(SPACE, (0, 0))
+    pygame.draw.rect(WIN, BLACK, BORDER)
     #function to put the image on the surface of screen
     WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
     WIN.blit(RED_SPACESHIP, (red.x, red.y))
@@ -64,13 +66,15 @@ def handle_bullets(yellow_bullets, red_bullets, yellow, red):
         if red.colliderect(bullet):
             pygame.event.post(pygame.event.Event(RED_HIT))
             yellow_bullets.remove(bullet)
+        elif bullet.x > WIDTH:
+            yellow_bullets.remove(bullet)
 
     for bullet in red_bullets:
         bullet.x -= BULLET_VEL
         if yellow.colliderect(bullet):
             pygame.event.post(pygame.event.Event(YELLOW_HIT))
             red_bullets.remove(bullet)
-        elif bullet.x<0:
+        elif bullet.x < 0:
             red_bullets.remove(bullet)
 
 
